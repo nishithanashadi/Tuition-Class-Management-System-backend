@@ -12,17 +12,27 @@ app.use(
 );
 
 app.use(express.json());
-
 app.get('/results', (req,res) => {
-    controller.getResults(results => {
-        res.send(results);
-    }); 
+    controller.getResults((req, res, next) => {
+        res.send();
+    });
 });
 
-app.get('/result', (req, res) => {
-    const id = req.query.id;
-    controller.getResultById(id, result => {
-        res.send(result);
+app.post('/createresult', (req, res) => {
+    controller.addResult(req.body, (callack) => {
+        res.send();
+    });
+});
+
+app.post('/updateresult', (req, res) => {
+    controller.updateResult(req.body, (callack) => {
+        res.send(callack);
+    });
+});
+
+app.post('/deleteresult', (req, res) => {
+    controller.deleteResult(req.body, (callack) => {
+        res.send(callack);
     });
 });
 

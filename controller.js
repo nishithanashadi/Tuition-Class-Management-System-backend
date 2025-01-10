@@ -1,29 +1,63 @@
-const results = [
-    {
-        id:1,
-        name: 'John',
-        subject: 'Math',
-        grade: 'c',
-        status:'pass', 
-    },
+const Result = require('./model');
 
-    {
-        id:2,
-        name: 'noank',
-        subject: 'science',
-        grade: 'f',
-        status:'fail', 
-    },
-];
-
-const getResults = (cb) => {
-    cb(results);
+const getResult = (req, res, next) => {
+    Result.find()
+        .then(response => {
+            res.json({ response })
+        })
+        .catch(error => {
+            res.json({ error })
+        });
 };
 
-const getResultById = (id, cb) => {
-    const result = results.find(result => result.id === id);
-    cb(result);
-};
+const addResult = (req, res, next) => {
+    const result = new Result({
+        id: req.body.id,
+        name: req.body.name,
+        subject: req.body.subject,
+        grade: req.body.grade,
+        status: req.body.status,
+    });
+    result.save()
+        .then(response => {
+            res.json({ response })
+        })
+        .catch(error => {
+            res.json({ error })
+        });
+}
 
-exports.getResults = getResults; 
-exports.getResultById = getResultById;
+const updateResult = (req, res, next) => {
+    const { id, name, subject, grade, status } = req.body;
+    Result.updateOne({id: id}, { 
+        $set: { 
+            name: name,
+            subject: subject, 
+            grade: grade, 
+            status: status
+        
+        } })
+    
+        .then(response => {
+            res.json({ response })
+        })
+        .catch(error => {
+            res.json({ error })
+        });
+}
+
+const deleteResult = (req, res, next) => {
+    const id = req.body.id;
+    Result.deleteOne({ id: id })
+      .then(response => {
+            res.json({ response })
+        })
+       .catch(error => {
+            res.json({ error })
+        });
+}
+
+exports.getResult = getResult;
+exports.addResult = addResult;
+exports.updateResult = updateResult;
+exports.deleteResult = deleteResult;
